@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Heart, Star, Minus, Plus, ShoppingBag, Zap, Truck, RotateCcw, Shield, Check } from "lucide-react";
+import { Heart, Star, Minus, Plus, ShoppingBag, Zap, Truck, RotateCcw, Shield, Check, Share2, Ruler, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import TopUtilityHeader from "@/components/layout/TopUtilityHeader";
 import MainHeader from "@/components/layout/MainHeader";
 import Footer from "@/components/layout/Footer";
@@ -134,10 +135,34 @@ const ProductDetail = () => {
 
           {/* Right Side - Product Details */}
           <div className="space-y-6">
-            {/* Badge */}
-            {product.badge && (
-              <Badge className="bg-green-600 text-white">{product.badge}</Badge>
-            )}
+            {/* Badge & Share */}
+            <div className="flex items-center justify-between">
+              {product.badge && (
+                <Badge className="bg-green-600 text-white">{product.badge}</Badge>
+              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({
+                      title: product.name,
+                      text: `Check out this beautiful ${product.name} from Parampare!`,
+                      url: window.location.href,
+                    });
+                  } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast({
+                      title: "Link Copied!",
+                      description: "Product link copied to clipboard.",
+                    });
+                  }
+                }}
+                className="ml-auto"
+              >
+                <Share2 className="h-5 w-5" />
+              </Button>
+            </div>
 
             {/* Title */}
             <h1 className="text-2xl md:text-3xl font-display font-semibold text-foreground">
@@ -209,6 +234,44 @@ const ProductDetail = () => {
                 </p>
               </div>
             </div>
+
+            {/* Size Guide */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="link" className="p-0 h-auto text-gold gap-2">
+                  <Ruler className="h-4 w-4" />
+                  View Size Guide
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="font-display">Saree Size Guide</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 text-sm">
+                  <div className="grid grid-cols-2 gap-4 p-4 bg-secondary/50 rounded-lg">
+                    <div>
+                      <p className="text-muted-foreground">Saree Length</p>
+                      <p className="font-medium">5.5 meters</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Saree Width</p>
+                      <p className="font-medium">1.1 meters</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Blouse Piece</p>
+                      <p className="font-medium">0.8 meters</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Total Length</p>
+                      <p className="font-medium">6.3 meters</p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground">
+                    All our Ilkal sarees come in standard sizing. The blouse piece is unstitched and can be customized to your measurements.
+                  </p>
+                </div>
+              </DialogContent>
+            </Dialog>
 
             {/* Delivery Info */}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">

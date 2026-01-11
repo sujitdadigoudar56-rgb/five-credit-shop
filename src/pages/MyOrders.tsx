@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Package, ChevronRight, Truck } from "lucide-react";
+import { Package, ChevronRight, Truck, CheckCircle2, Clock, PackageCheck, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TopUtilityHeader from "@/components/layout/TopUtilityHeader";
 import MainHeader from "@/components/layout/MainHeader";
@@ -19,6 +19,82 @@ interface Order {
   estimatedDelivery: string;
   trackingNumber?: string;
 }
+
+// Order tracking steps component
+const OrderTrackingSteps = ({ status }: { status: string }) => {
+  const steps = [
+    { id: 1, label: "Order Confirmed", icon: CheckCircle2 },
+    { id: 2, label: "Processing", icon: Clock },
+    { id: 3, label: "Shipped", icon: Truck },
+    { id: 4, label: "Out for Delivery", icon: PackageCheck },
+    { id: 5, label: "Delivered", icon: Home },
+  ];
+
+  const getActiveStep = () => {
+    switch (status.toLowerCase()) {
+      case "order confirmed": return 1;
+      case "processing": return 2;
+      case "shipped": return 3;
+      case "out for delivery": return 4;
+      case "delivered": return 5;
+      case "cancelled": return 0;
+      default: return 1;
+    }
+  };
+
+  const activeStep = getActiveStep();
+
+  if (status.toLowerCase() === "cancelled") {
+    return (
+      <div className="flex items-center gap-2 text-destructive bg-destructive/10 p-3 rounded-lg">
+        <Package className="h-5 w-5" />
+        <span className="font-medium">Order Cancelled</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative">
+      {/* Progress Line */}
+      <div className="absolute top-5 left-0 right-0 h-0.5 bg-border mx-8">
+        <div 
+          className="h-full bg-gold transition-all duration-500"
+          style={{ width: `${((activeStep - 1) / (steps.length - 1)) * 100}%` }}
+        />
+      </div>
+
+      {/* Steps */}
+      <div className="relative flex justify-between">
+        {steps.map((step) => {
+          const Icon = step.icon;
+          const isActive = step.id <= activeStep;
+          const isCurrent = step.id === activeStep;
+
+          return (
+            <div key={step.id} className="flex flex-col items-center">
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center z-10 transition-all ${
+                  isActive
+                    ? "bg-gold text-foreground"
+                    : "bg-secondary text-muted-foreground"
+                } ${isCurrent ? "ring-4 ring-gold/30" : ""}`}
+              >
+                <Icon className="h-5 w-5" />
+              </div>
+              <span
+                className={`text-xs mt-2 text-center max-w-[70px] ${
+                  isActive ? "text-foreground font-medium" : "text-muted-foreground"
+                }`}
+              >
+                {step.label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 const MyOrders = () => {
   const navigate = useNavigate();
@@ -139,26 +215,31 @@ const MyOrders = () => {
               </div>
 
               {/* Order Status & Items */}
-              <div className="p-4 md:p-6">
-                {/* Status */}
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
-                      <span className="w-2 h-2 rounded-full bg-current"></span>
+              <div className="p-4 md:p-6 space-y-6">
+                {/* Order Tracking Steps */}
+                <div className="pb-6 border-b border-border/50">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-medium text-foreground">
                       {order.status === "Order Confirmed"
                         ? `Arriving ${formatDate(order.estimatedDelivery)}`
                         : order.status}
-                    </span>
+                    </h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={order.status === "Order Confirmed" || order.status === "Processing"}
+                      className="gap-2"
+                      onClick={() => {
+                        if (order.trackingNumber) {
+                          window.open(`https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx`, '_blank');
+                        }
+                      }}
+                    >
+                      <Truck className="h-4 w-4" />
+                      Track Order
+                    </Button>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={order.status === "Order Confirmed"}
-                    className="gap-2"
-                  >
-                    <Truck className="h-4 w-4" />
-                    Track Your Order
-                  </Button>
+                  <OrderTrackingSteps status={order.status} />
                 </div>
 
                 {/* Items */}
