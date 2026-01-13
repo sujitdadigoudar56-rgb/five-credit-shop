@@ -37,42 +37,71 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cream flex">
-      {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-cream flex-col items-center justify-center p-12 relative">
+    <div className="min-h-screen flex">
+      {/* Left Side - Dark Maroon Branding */}
+      <div className="hidden lg:flex lg:w-1/2 bg-[#3d2a2a] flex-col items-center justify-center p-12 relative">
         <div className="text-center mb-8">
-          <p className="text-muted-foreground text-lg mb-2">Welcome to</p>
-          <h1 className="text-5xl font-display font-bold text-maroon mb-2">Parampare</h1>
-          <p className="text-muted-foreground text-lg tracking-wide">Authentic Ilkal Sarees</p>
+          <p className="text-cream/80 text-lg mb-2 font-body">Welcome to</p>
+          <h1 className="text-5xl font-display font-bold text-cream mb-2">Parampare</h1>
+          <p className="text-cream/80 text-lg tracking-wide font-body">Authentic Ilkal Sarees</p>
         </div>
         
-        {/* Saree Stack Illustration */}
-        <div className="relative w-64 h-80">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
-            {/* Weaving loom illustration */}
-            <svg viewBox="0 0 200 250" className="w-64 h-80">
-              {/* Loom Frame */}
-              <rect x="30" y="20" width="8" height="200" fill="hsl(var(--maroon))" rx="2"/>
-              <rect x="162" y="20" width="8" height="200" fill="hsl(var(--maroon))" rx="2"/>
-              <rect x="25" y="10" width="150" height="15" fill="hsl(var(--maroon-dark))" rx="3"/>
+        {/* Loom & Saree Stack Illustration */}
+        <div className="relative w-72 h-80">
+          <svg viewBox="0 0 280 300" className="w-full h-full">
+            {/* Loom Frame - Wooden Brown */}
+            <rect x="40" y="30" width="12" height="180" fill="#8B6914" rx="3"/>
+            <rect x="228" y="30" width="12" height="180" fill="#8B6914" rx="3"/>
+            <rect x="35" y="20" width="210" height="18" fill="#a67c00" rx="4"/>
+            <rect x="35" y="200" width="210" height="12" fill="#a67c00" rx="3"/>
+            
+            {/* Loom top beam */}
+            <rect x="50" y="38" width="180" height="8" fill="#654321" rx="2"/>
+            
+            {/* Warp threads - vertical golden threads */}
+            {[...Array(18)].map((_, i) => (
+              <line 
+                key={i} 
+                x1={65 + i * 10} 
+                y1="46" 
+                x2={65 + i * 10} 
+                y2="195" 
+                stroke="#D4AF37" 
+                strokeWidth="1.5"
+                opacity="0.9"
+              />
+            ))}
+            
+            {/* Woven fabric on loom */}
+            <rect x="58" y="80" width="164" height="110" fill="#C41E3A" rx="2"/>
+            
+            {/* Fabric pattern - horizontal stripes */}
+            <rect x="58" y="80" width="164" height="18" fill="#D4AF37"/>
+            <rect x="58" y="172" width="164" height="18" fill="#D4AF37"/>
+            
+            {/* Weaving shuttle */}
+            <ellipse cx="140" cy="140" rx="35" ry="8" fill="#654321"/>
+            <ellipse cx="140" cy="140" rx="25" ry="5" fill="#8B4513"/>
+            
+            {/* Folded Saree Stack */}
+            <g transform="translate(70, 220)">
+              {/* Bottom saree - Green */}
+              <rect x="0" y="50" width="140" height="18" fill="#2d5a4a" rx="3"/>
+              <rect x="0" y="50" width="140" height="4" fill="#D4AF37" rx="1"/>
               
-              {/* Warp threads */}
-              {[...Array(12)].map((_, i) => (
-                <line key={i} x1={50 + i * 10} y1="25" x2={50 + i * 10} y2="180" stroke="hsl(var(--gold))" strokeWidth="1.5"/>
-              ))}
+              {/* Middle saree - Maroon */}
+              <rect x="10" y="35" width="120" height="18" fill="#8B0000" rx="3"/>
+              <rect x="10" y="35" width="120" height="4" fill="#D4AF37" rx="1"/>
               
-              {/* Woven fabric */}
-              <rect x="45" y="80" width="110" height="100" fill="hsl(var(--maroon))" rx="2"/>
-              <rect x="45" y="80" width="110" height="20" fill="hsl(var(--gold))" rx="2"/>
-              <rect x="45" y="160" width="110" height="20" fill="hsl(var(--gold))" rx="2"/>
+              {/* Top saree - Golden/Yellow */}
+              <rect x="20" y="20" width="100" height="18" fill="#DAA520" rx="3"/>
+              <rect x="20" y="20" width="100" height="4" fill="#228B22" rx="1"/>
               
-              {/* Saree stack below */}
-              <rect x="50" y="195" width="100" height="12" fill="hsl(var(--gold))" rx="2"/>
-              <rect x="55" y="207" width="90" height="12" fill="hsl(var(--maroon))" rx="2"/>
-              <rect x="60" y="219" width="80" height="12" fill="#2d5a4a" rx="2"/>
-              <rect x="65" y="231" width="70" height="12" fill="hsl(var(--gold-dark))" rx="2"/>
-            </svg>
-          </div>
+              {/* Topmost saree - Orange */}
+              <rect x="30" y="5" width="80" height="18" fill="#FF8C00" rx="3"/>
+              <rect x="30" y="5" width="80" height="4" fill="#C41E3A" rx="1"/>
+            </g>
+          </svg>
         </div>
       </div>
 
@@ -120,7 +149,7 @@ const Login = () => {
               <div className="flex justify-center gap-4 text-sm">
                 <button 
                   onClick={() => navigate(-1)}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors underline"
                 >
                   Change number
                 </button>
